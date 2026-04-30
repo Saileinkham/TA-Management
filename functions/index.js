@@ -6,6 +6,7 @@ exports.api = onRequest(
     region: 'asia-southeast1',
     timeoutSeconds: 300,
     memory: '512MiB',
+    invoker: 'public',
   },
   async (req, res) => {
     try {

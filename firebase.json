@@ -22,10 +22,18 @@
   },
   "functions": [
     {
-      "source": "functions",
+      "source": ".",
       "codebase": "default",
       "ignore": [
         "node_modules",
+        "client",
+        "server/node_modules",
+        "functions/node_modules",
+        "server/ta.db",
+        ".env",
+        "client/.env",
+        "server/.env",
+        "functions/.env",
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
