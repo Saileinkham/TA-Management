@@ -122,9 +122,21 @@ function getCycleDates(startDate) {
   return dates;
 }
 
+function normalizeTimeInput(val) {
+  if (val == null || val === '') return '';
+  const s = String(val).trim();
+  if (/^\d{3,4}$/.test(s)) {
+    const raw = s.padStart(4, '0');
+    const h = parseInt(raw.slice(0, 2), 10);
+    const m = parseInt(raw.slice(2, 4), 10);
+    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${h}.${String(m).padStart(2, '0')}B2`;
+  }
+  return s;
+}
+
 function parseTimeMin(val) {
   if (!val) return null;
-  const s = String(val).trim().replace(/\s*[Bb]\d+(?:\.\d+)?$/, '');
+  const s = normalizeTimeInput(val).replace(/\s*[Bb]\d+(?:\.\d+)?$/, '');
   const parts = s.split('.');
   const h = parseInt(parts[0]) || 0;
   let m = 0;

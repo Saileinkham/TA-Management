@@ -60,9 +60,21 @@ function DayTypeMenu({ x, y, current, onSelect, onClose }) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function formatTimeVal(val) {
+function normalizeTimeInput(val) {
   if (val == null || val === '') return '';
   const s = String(val).trim();
+  if (/^\d{3,4}$/.test(s)) {
+    const raw = s.padStart(4, '0');
+    const h = parseInt(raw.slice(0, 2), 10);
+    const m = parseInt(raw.slice(2, 4), 10);
+    if (h >= 0 && h <= 23 && m >= 0 && m <= 59) return `${h}.${String(m).padStart(2, '0')}B2`;
+  }
+  return s;
+}
+
+function formatTimeVal(val) {
+  if (val == null || val === '') return '';
+  const s = normalizeTimeInput(val);
   const breakMatch = s.match(/[Bb](\d+(?:\.\d+)?)$/);
   const breakHr    = breakMatch ? parseFloat(breakMatch[1]) : null;
   const timeStr    = s.replace(/\s*[Bb]\d+(?:\.\d+)?$/, '').trim();
@@ -76,7 +88,7 @@ function formatTimeVal(val) {
 
 function parseTimeMin(val) {
   if (val == null || val === '') return null;
-  const s = String(val).trim().replace(/\s*[Bb]\d+(?:\.\d+)?$/, '').trim();
+  const s = normalizeTimeInput(val).replace(/\s*[Bb]\d+(?:\.\d+)?$/, '').trim();
   const parts = s.split('.');
   const h = parseInt(parts[0]) || 0;
   let m = 0;
@@ -124,9 +136,9 @@ function patchForCell(entry, rowType, rawValue) {
     patch.check_val = null;
   } else {
     if (patch.day_type !== 'work') patch.day_type = 'work';
-    if (rowType === 'plan')  patch.plan_val  = v === '' ? null : v;
+    if (rowType === 'plan')  patch.plan_val  = v === '' ? null : normalizeTimeInput(v);
     if (rowType === 'ot')    patch.ot_val    = v === '' ? null : v;
-    if (rowType === 'check') patch.check_val = v === '' ? null : v;
+    if (rowType === 'check') patch.check_val = v === '' ? null : normalizeTimeInput(v);
   }
 
   return patch;
