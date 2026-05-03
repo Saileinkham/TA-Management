@@ -125,6 +125,10 @@ function getCycleDates(startDate) {
 function normalizeTimeInput(val) {
   if (val == null || val === '') return '';
   const s = String(val).trim();
+  if (/^\d{3}$/.test(s) && s.endsWith('0')) {
+    const h = parseInt(s.slice(0, 2), 10);
+    if (h >= 10 && h <= 23) return `${h}.00B2`;
+  }
   if (/^\d{3,4}$/.test(s)) {
     const raw = s.padStart(4, '0');
     const h = parseInt(raw.slice(0, 2), 10);
